@@ -36,7 +36,10 @@
       :class="{
         'opacity-50': state.isLoading
       }"
-      class="px-8 py-3 mt-10 text-2xl font-bold text-white rounded-full bg-brand-main focus:outline-none transition-all duration-150">Entrar</button>
+      class="px-8 py-3 mt-10 text-2xl font-bold text-white rounded-full bg-brand-main focus:outline-none transition-all duration-150">
+      <icon v-if="state.isLoading" name="loading" class="animate-spin"></icon>
+      <span v-else>Entrar</span>
+      </button>
     </form>
   </div>
 </template>
@@ -45,11 +48,18 @@
 import { reactive } from 'vue'
 import { useField } from 'vee-validate'
 import useModal from '../../hooks/useModal'
+import Icon from '../Icon'
 import { validateEmptyAndLength3, validateEmptyAndEmail } from '../../utils/validators'
+import services from '../../services'
+import { useRouter } from 'vue-router'
+import { useToast } from 'vue-toastification'
 
 export default {
+  components: { Icon },
   setup () {
+    const router = useRouter()
     const modal = useModal()
+    const toast = useToast()
 
     const {
       value: emailValue,
@@ -74,8 +84,41 @@ export default {
       }
     })
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+      try {
+        toast.clear()
+        state.isLoading = true
+        const { data, errors } = await services.auth.login({
+          email: state.email.value,
+          password: state.password.value
+        })
 
+        if (!errors) {
+          window.localStorage.setItem('token', data.token)
+          router.push({ name: 'Feedbacks' })
+          state.isLoading = false
+          modal.close()
+          return
+        }
+
+        if (errors.status === 404) {
+          toast.error('E-mail não encontrado')
+        }
+
+        if (errors.status === 401) {
+          toast.error('E-mail/senha inválidos')
+        }
+
+        if (errors.status === 400) {
+          toast.error('Ocorreu um erro ao fazer login')
+        }
+
+        state.isLoading = false
+      } catch (error) {
+        state.isLoading = false
+        state.hasErrors = !!error
+        toast.error('Ocorreu um erro ao fazer login')
+      }
     }
 
     return {
