@@ -25,7 +25,7 @@
         <p class="text-lg font-medium text-white">
           Receba ideias, reclamações e feedbacks com um <br class="hidden lg:inline-block">
           simples widget na página.
-        </p>
+        </p><br>
         <div>
           <button class="px-6 py-2 font-bold bg-white rounded-full text-brand-main focus:outline-none">
             Crie uma conta grátis
