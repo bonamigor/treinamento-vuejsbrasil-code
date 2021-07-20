@@ -99,7 +99,7 @@ export default {
       toast.clear()
       try {
         await navigator.clipboard.writeText(store.User.currentUser.apiKey)
-        toast.success('Copiado seu bytola!')
+        toast.success('Copiado!')
       } catch (error) {
         handleError(error)
       }
