@@ -56,7 +56,7 @@ import ContentLoader from '../../components/ContentLoader'
 import Icon from '../../components/Icon'
 import useStore from '../../hooks/useStore'
 import pallete from '../../../pallete'
-import { reactive, watch } from 'vue'
+import { onErrorCaptured, reactive, watch } from 'vue'
 import services from '../../services'
 import { setApiKey } from '../../store/user'
 import { useToast } from 'vue-toastification'
@@ -104,6 +104,8 @@ export default {
         handleError(error)
       }
     }
+
+    onErrorCaptured(handleError)
 
     return {
       state,

@@ -87,7 +87,7 @@ export default {
         return
       }
 
-      state.filters = state.filter.map((filter) => {
+      state.filters = state.filters.map((filter) => {
         if (filter.type === type) {
           return { ...filter, active: true }
         }
